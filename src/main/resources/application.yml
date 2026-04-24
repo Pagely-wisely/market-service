@@ -6,7 +6,9 @@ spring:
     name: marketservice
 
   config:
-    import: optional:file:.env[.properties]
+    import:
+      - optional:configserver:http://localhost:8888
+      - optional:classpath:.env[.properties]
 
   datasource:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${MARKET_DB_NAME}
@@ -35,4 +37,3 @@ eureka:
     enabled: false
     register-with-eureka: false
     fetch-registry: false
-
