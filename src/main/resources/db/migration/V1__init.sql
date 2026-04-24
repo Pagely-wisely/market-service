@@ -7,6 +7,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE p_sale_post (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     seller_id UUID NOT NULL,
+    book_id VARCHAR(20) NOT NULL,
 
     title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
@@ -14,10 +15,6 @@ CREATE TABLE p_sale_post (
 
     status VARCHAR(20) NOT NULL CHECK (status IN ('AVAILABLE', 'RESERVED', 'SOLD', 'DELETED')),
     condition VARCHAR(20) NOT NULL,
-
-    isbn VARCHAR(20) NOT NULL,
-    book_title VARCHAR(100) NOT NULL,
-    book_author VARCHAR(100) NOT NULL,
 
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     created_by UUID NOT NULL,
