@@ -8,6 +8,8 @@ import com.pagely.marketservice.domain.model.SalePost;
 import com.pagely.marketservice.domain.repository.SalePostRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,5 +40,9 @@ public class SalePostService {
                 .orElseThrow(() -> new BusinessException(SalePostErrorCode.SALE_POST_NOT_FOUND));
 
         return SalePostResult.fromEntity(salePost);
+    }
+
+    public Page<SalePostResult> getSalePosts(Pageable pageable) {
+        return salePostRepository.findAll(pageable).map(SalePostResult::fromEntity);
     }
 }
