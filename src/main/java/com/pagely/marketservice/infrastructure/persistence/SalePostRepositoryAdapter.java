@@ -5,6 +5,8 @@ import com.pagely.marketservice.domain.repository.SalePostRepository;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -21,5 +23,10 @@ public class SalePostRepositoryAdapter implements SalePostRepository {
     @Override
     public Optional<SalePost> findById(UUID salePostId) {
         return jpaSalePostRepository.findById(salePostId);
+    }
+
+    @Override
+    public Page<SalePost> findAll(Pageable pageable) {
+        return jpaSalePostRepository.findAll(pageable);
     }
 }
