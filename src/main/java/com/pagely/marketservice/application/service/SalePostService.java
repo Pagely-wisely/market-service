@@ -25,8 +25,8 @@ public class SalePostService {
                 command.price(),
                 command.condition()
         );
-        salePostRepository.save(salePost);
+        SalePost saved = salePostRepository.save(salePost);
 
-        return SalePostResult.fromEntity(salePost);
+        return SalePostResult.fromEntity(saved);
     }
 }
