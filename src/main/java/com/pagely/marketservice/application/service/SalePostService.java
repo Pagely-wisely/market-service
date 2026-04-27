@@ -15,6 +15,7 @@ public class SalePostService {
 
     private final SalePostRepository salePostRepository;
 
+    @Transactional
     public SalePostResult createSalePost(CreateSalePostCommand command) {
         SalePost salePost = SalePost.create(
                 command.sellerId(),
