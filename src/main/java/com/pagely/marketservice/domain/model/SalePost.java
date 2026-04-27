@@ -1,5 +1,6 @@
 package com.pagely.marketservice.domain.model;
 
+import com.pagely.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "p_sale_post")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SalePost {
+public class SalePost extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -43,7 +43,7 @@ public class SalePost {
 
     // 판매 가격
     @Column(nullable = false)
-    private Integer price;
+    private int price;
 
     // 판매글 상태
     @Enumerated(EnumType.STRING)
@@ -54,23 +54,27 @@ public class SalePost {
     @Column(nullable = false, length = 20)
     private String condition;
 
-    // 공통 감사 컬럼
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    public static SalePost create(
+            UUID sellerId,
+            String bookId,
+            String title,
+            String description,
+            int price,
+            String condition
+    ) {
+        if (price <= 0) {
+            throw new IllegalArgumentException("판매 가격은 0보다 커야합니다.");
+        }
 
-    @Column(name = "created_by", nullable = false, columnDefinition = "uuid")
-    private UUID createdBy;
+        SalePost salePost = new SalePost();
+        salePost.sellerId = sellerId;
+        salePost.bookId = bookId;
+        salePost.title = title;
+        salePost.description = description;
+        salePost.price = price;
+        salePost.condition = condition;
+        salePost.status = SalePostStatus.AVAILABLE;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "updated_by", columnDefinition = "uuid")
-    private UUID updatedBy;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @Column(name = "deleted_by", columnDefinition = "uuid")
-    private UUID deletedBy;
-
+        return salePost;
+    }
 }
