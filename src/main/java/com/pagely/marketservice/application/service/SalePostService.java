@@ -1,9 +1,12 @@
 package com.pagely.marketservice.application.service;
 
+import com.pagely.common.exception.BusinessException;
 import com.pagely.marketservice.application.dto.command.CreateSalePostCommand;
 import com.pagely.marketservice.application.dto.result.SalePostResult;
+import com.pagely.marketservice.domain.exception.SalePostErrorCode;
 import com.pagely.marketservice.domain.model.SalePost;
 import com.pagely.marketservice.domain.repository.SalePostRepository;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,5 +31,12 @@ public class SalePostService {
         SalePost saved = salePostRepository.save(salePost);
 
         return SalePostResult.fromEntity(saved);
+    }
+
+    public SalePostResult getSalePost(UUID salePostId) {
+        SalePost salePost = salePostRepository.findById(salePostId)
+                .orElseThrow(() -> new BusinessException(SalePostErrorCode.SALE_POST_NOT_FOUND));
+
+        return SalePostResult.fromEntity(salePost);
     }
 }

@@ -1,6 +1,8 @@
 package com.pagely.marketservice.domain.model;
 
 import com.pagely.common.entity.BaseEntity;
+import com.pagely.common.exception.BusinessException;
+import com.pagely.marketservice.domain.exception.SalePostErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -63,7 +65,7 @@ public class SalePost extends BaseEntity {
             String condition
     ) {
         if (price <= 0) {
-            throw new IllegalArgumentException("판매 가격은 0보다 커야합니다.");
+            throw new BusinessException(SalePostErrorCode.INVALID_SALE_PRICE);
         }
 
         SalePost salePost = new SalePost();
