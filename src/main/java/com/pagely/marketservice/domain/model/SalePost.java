@@ -99,13 +99,11 @@ public class SalePost extends BaseEntity {
         this.status = SalePostStatus.RESERVED;
     }
 
+    public boolean isSeller(UUID userId) {
+        return this.sellerId.equals(userId);
+    }
+
     private boolean isAvailable() {
         return this.status == SalePostStatus.AVAILABLE;
     }
-
-    private boolean isSeller(UUID buyerId) {
-        return this.sellerId.equals(buyerId);
-    }
-
-
 }

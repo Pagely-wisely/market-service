@@ -22,4 +22,9 @@ public class OrderRepositoryAdapter implements OrderRepository {
     public Optional<Order> findById(UUID orderId) {
         return jpaOrderRepository.findById(orderId);
     }
+
+    @Override
+    public Optional<Order> findByIdWithSalePost(UUID orderId) {
+        return jpaOrderRepository.findByIdWithSalePost(orderId);
+    }
 }

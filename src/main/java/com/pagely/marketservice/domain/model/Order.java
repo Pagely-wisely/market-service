@@ -90,4 +90,26 @@ public class Order extends BaseEntity {
             throw new BusinessException(OrderErrorCode.NOT_ORDER_OWNER);
         }
     }
+
+    // 해당 주문의 판매자인지 검증
+    public void validateSeller(UUID sellerId) {
+        SalePost salePost = this.getSalePost();
+
+        if (salePost != null && !salePost.isSeller(sellerId)) {
+            throw new BusinessException(OrderErrorCode.ORDER_SELLER_MISMATCH);
+        }
+    }
+
+    // 운송장 번호 / 택배사 정보 등록
+    public void registerTrackingNumber(String trackingNumber, String courierCompany) {
+        // 주문 승인(ACCEPTED) 상태에서만 운송장 정보 등록 가능
+        if (this.status != OrderStatus.ACCEPTED) {
+            throw new BusinessException(OrderErrorCode.ORDER_STATUS_NOT_ACCEPTED);
+        }
+
+        this.trackingNumber = trackingNumber;
+        this.courierCompany = courierCompany;
+        this.trackingRegisteredAt = LocalDateTime.now();
+        this.status = OrderStatus.SHIPPING;
+    }
 }

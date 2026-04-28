@@ -2,6 +2,7 @@ package com.pagely.marketservice.application.service;
 
 import com.pagely.common.exception.BusinessException;
 import com.pagely.marketservice.application.dto.command.CreateOrderCommand;
+import com.pagely.marketservice.application.dto.command.RegisterTrackingNumberCommand;
 import com.pagely.marketservice.application.dto.result.OrderResult;
 import com.pagely.marketservice.domain.exception.OrderErrorCode;
 import com.pagely.marketservice.domain.exception.SalePostErrorCode;
@@ -42,6 +43,21 @@ public class OrderService {
                 .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
 
         order.validateOwner(buyerId); // 구매자의 주문인지 검증
+
+        return OrderResult.fromEntity(order);
+    }
+
+    // 판매자가 운송장 번호 등록
+    @Transactional
+    public OrderResult registerTrackingNumber(RegisterTrackingNumberCommand command) {
+        // 주문 조회
+        Order order = orderRepository.findByIdWithSalePost(command.orderId())
+                .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
+        // 주문의 판매자인지 검증
+        order.validateSeller(command.sellerId());
+
+        // 운송장 번호 등록
+        order.registerTrackingNumber(command.trackingNumber(), command.courierCompany());
 
         return OrderResult.fromEntity(order);
     }

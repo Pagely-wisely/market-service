@@ -8,4 +8,6 @@ public interface OrderRepository {
     Order save(Order order);
 
     Optional<Order> findById(UUID orderId);
+
+    Optional<Order> findByIdWithSalePost(UUID orderID);
 }
