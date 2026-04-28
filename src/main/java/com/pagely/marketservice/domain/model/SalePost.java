@@ -79,4 +79,33 @@ public class SalePost extends BaseEntity {
 
         return salePost;
     }
+
+    // 주문 가능한 판매글인지 검증
+    public void validateOrderable(UUID buyerId) {
+        if (!isAvailable()) {
+            throw new BusinessException(SalePostErrorCode.NOT_AVAILABLE);
+        }
+        if (isSeller(buyerId)) {
+            throw new BusinessException(SalePostErrorCode.CANNOT_ORDER_OWN);
+        }
+    }
+
+    // 예약중으로 상태 변경
+    public void markReserved() {
+        if (!isAvailable()) {
+            throw new BusinessException(SalePostErrorCode.NOT_AVAILABLE);
+        }
+
+        this.status = SalePostStatus.RESERVED;
+    }
+
+    private boolean isAvailable() {
+        return this.status == SalePostStatus.AVAILABLE;
+    }
+
+    private boolean isSeller(UUID buyerId) {
+        return this.sellerId.equals(buyerId);
+    }
+
+
 }
