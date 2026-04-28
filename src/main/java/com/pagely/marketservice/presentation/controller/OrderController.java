@@ -36,9 +36,10 @@ public class OrderController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<ApiResponse> getOrder(
+            @RequestHeader("X-User-Id") UUID buyerId,
             @PathVariable("orderId") UUID orderId
     ) {
-        OrderResult result = orderService.getOrder(orderId);
+        OrderResult result = orderService.getOrder(buyerId, orderId);
         return ApiResponse.ok(OrderResponse.fromResult(result));
     }
 }

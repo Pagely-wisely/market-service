@@ -4,6 +4,7 @@ import com.pagely.common.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public enum OrderErrorCode implements ErrorCode {
+    NOT_ORDER_OWNER("본인의 주문만 조회할 수 있습니다.", HttpStatus.FORBIDDEN),
     ORDER_NOT_FOUND("해당 주문을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
     private final String code;

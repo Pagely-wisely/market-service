@@ -1,6 +1,8 @@
 package com.pagely.marketservice.domain.model;
 
 import com.pagely.common.entity.BaseEntity;
+import com.pagely.common.exception.BusinessException;
+import com.pagely.marketservice.domain.exception.OrderErrorCode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -81,5 +83,11 @@ public class Order extends BaseEntity {
         salePost.markReserved(); // 주문 생성 시 판매글 예약상태로 변경
 
         return order;
+    }
+
+    public void validateOwner(UUID buyerId) {
+        if (!this.buyerId.equals(buyerId)) {
+            throw new BusinessException(OrderErrorCode.NOT_ORDER_OWNER);
+        }
     }
 }
