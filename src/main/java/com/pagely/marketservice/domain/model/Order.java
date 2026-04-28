@@ -65,4 +65,21 @@ public class Order extends BaseEntity {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderHistory> histories = new ArrayList<>();
+
+    public static Order create(
+            UUID buyerId,
+            SalePost salePost
+    ) {
+        salePost.validateOrderable(buyerId);
+
+        Order order = new Order();
+        order.buyerId = buyerId;
+        order.salePost = salePost;
+        order.status = OrderStatus.PENDING;
+        order.price = salePost.getPrice();
+
+        salePost.markReserved(); // 주문 생성 시 판매글 예약상태로 변경
+
+        return order;
+    }
 }
