@@ -3,11 +3,13 @@ package com.pagely.marketservice.application.service;
 import com.pagely.common.exception.BusinessException;
 import com.pagely.marketservice.application.dto.command.CreateOrderCommand;
 import com.pagely.marketservice.application.dto.result.OrderResult;
+import com.pagely.marketservice.domain.exception.OrderErrorCode;
 import com.pagely.marketservice.domain.exception.SalePostErrorCode;
 import com.pagely.marketservice.domain.model.Order;
 import com.pagely.marketservice.domain.model.SalePost;
 import com.pagely.marketservice.domain.repository.OrderRepository;
 import com.pagely.marketservice.domain.repository.SalePostRepository;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,5 +35,14 @@ public class OrderService {
         //TODO: 주문 생성 완료 이벤트 발행 처리
 
         return OrderResult.fromEntity(saved);
+    }
+
+    public OrderResult getOrder(UUID buyerId, UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
+
+        order.validateOwner(buyerId); // 구매자의 주문인지 검증
+
+        return OrderResult.fromEntity(order);
     }
 }
