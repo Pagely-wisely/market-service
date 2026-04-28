@@ -5,9 +5,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -33,9 +36,10 @@ public class Order {
     @Column(name = "buyer_id", nullable = false, columnDefinition = "uuid")
     private UUID buyerId;
 
-    // 판매글 ID
-    @Column(name = "sale_post_id", nullable = false, columnDefinition = "uuid")
-    private UUID salePostId;
+    // 판매글
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_post_id", nullable = false)
+    private SalePost salePost;
 
     // 주문 상태
     @Enumerated(EnumType.STRING)
