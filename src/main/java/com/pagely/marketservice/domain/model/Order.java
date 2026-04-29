@@ -93,9 +93,7 @@ public class Order extends BaseEntity {
 
     // 해당 주문의 판매자인지 검증
     public void validateSeller(UUID sellerId) {
-        SalePost salePost = this.getSalePost();
-
-        if (salePost != null && !salePost.isSeller(sellerId)) {
+        if (!this.getSalePost().isSeller(sellerId)) {
             throw new BusinessException(OrderErrorCode.ORDER_SELLER_MISMATCH);
         }
     }
