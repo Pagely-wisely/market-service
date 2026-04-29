@@ -1,5 +1,6 @@
 package com.pagely.marketservice.domain.model;
 
+import com.pagely.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "p_order_history")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderHistory {
+public class OrderHistory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -46,23 +47,4 @@ public class OrderHistory {
     // 변경 사유
     @Column(length = 200)
     private String reason;
-
-    // 공통 감사 컬럼
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "created_by", columnDefinition = "uuid")
-    private UUID createdBy;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "updated_by", columnDefinition = "uuid")
-    private UUID updatedBy;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @Column(name = "deleted_by", columnDefinition = "uuid")
-    private UUID deletedBy;
 }
