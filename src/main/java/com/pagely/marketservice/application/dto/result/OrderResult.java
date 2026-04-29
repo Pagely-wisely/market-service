@@ -15,9 +15,7 @@ public record OrderResult(
         String courierCompany,              // 택배사
         LocalDateTime trackingRegisteredAt, // 운송장 등록 일시
         LocalDateTime createdAt,            // 생성 시각
-        UUID createdBy,                     // 생성자
-        LocalDateTime updatedAt,            // 수정 시각
-        UUID updatedBy                      // 수정자
+        LocalDateTime updatedAt             // 수정 시각
 ) {
     public static OrderResult fromEntity(Order o) {
         return new OrderResult(
@@ -30,9 +28,7 @@ public record OrderResult(
                 o.getCourierCompany(),
                 o.getTrackingRegisteredAt(),
                 o.getCreatedAt(),
-                o.getCreatedBy(),
-                o.getUpdatedAt(),
-                o.getUpdatedBy()
+                o.getUpdatedAt()
         );
     }
 }

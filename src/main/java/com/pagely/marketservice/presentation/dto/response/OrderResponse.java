@@ -15,7 +15,7 @@ public record OrderResponse(
         String courierCompany,              // 택배사
         LocalDateTime trackingRegisteredAt, // 운송장 등록 일시
         LocalDateTime createdAt,            // 생성 시각
-        UUID createdBy                      // 생성자
+        LocalDateTime updatedAt             // 수정 시각
 ) {
     public static OrderResponse fromResult(OrderResult r) {
         return new OrderResponse(
@@ -28,7 +28,7 @@ public record OrderResponse(
                 r.courierCompany(),
                 r.trackingRegisteredAt(),
                 r.createdAt(),
-                r.createdBy()
+                r.updatedAt()
         );
     }
 }
