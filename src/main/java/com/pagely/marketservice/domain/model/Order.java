@@ -85,9 +85,9 @@ public class Order extends BaseEntity {
         return order;
     }
 
-    public void validateOwner(UUID buyerId) {
+    public void validateBuyer(UUID buyerId) {
         if (!this.buyerId.equals(buyerId)) {
-            throw new BusinessException(OrderErrorCode.NOT_ORDER_OWNER);
+            throw new BusinessException(OrderErrorCode.ORDER_BUYER_MISMATCH);
         }
     }
 

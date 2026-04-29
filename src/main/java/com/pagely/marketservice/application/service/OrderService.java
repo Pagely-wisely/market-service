@@ -42,7 +42,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
 
-        order.validateOwner(buyerId); // 구매자의 주문인지 검증
+        order.validateBuyer(buyerId); // 구매자의 주문인지 검증
 
         return OrderResult.fromEntity(order);
     }
