@@ -12,7 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -47,4 +46,13 @@ public class OrderHistory extends BaseEntity {
     // 변경 사유
     @Column(length = 200)
     private String reason;
+
+    public static OrderHistory of(Order order, OrderStatus fromStatus, String reason) {
+        OrderHistory history = new OrderHistory();
+        history.order = order;
+        history.fromStatus = fromStatus;
+        history.toStatus = order.getStatus();
+        history.reason = reason;
+        return history;
+    }
 }

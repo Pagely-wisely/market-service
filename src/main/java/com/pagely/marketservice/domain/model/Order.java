@@ -110,4 +110,18 @@ public class Order extends BaseEntity {
         this.trackingRegisteredAt = LocalDateTime.now();
         this.status = OrderStatus.SHIPPING;
     }
+
+    // 구매 확정 (구매자)
+    public void confirm() {
+        // 상태값
+        if (this.status != OrderStatus.SHIPPING) {
+            throw new BusinessException(OrderErrorCode.ORDER_STATUS_NOT_SHIPPING);
+        }
+
+        // 상태변경
+        this.status = OrderStatus.COMPLETED;
+
+        // 주문 이력 생성
+        OrderHistory.of(this, OrderStatus.SHIPPING, "구매 확정");
+    }
 }
