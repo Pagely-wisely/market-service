@@ -122,6 +122,6 @@ public class Order extends BaseEntity {
         this.status = OrderStatus.COMPLETED;
 
         // 주문 이력 생성
-        OrderHistory.of(this, OrderStatus.SHIPPING, "구매 확정");
+        this.histories.add(OrderHistory.of(this, OrderStatus.SHIPPING, "구매 확정"));
     }
 }
