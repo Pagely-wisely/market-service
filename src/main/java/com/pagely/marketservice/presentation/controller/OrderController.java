@@ -4,8 +4,10 @@ import com.pagely.common.response.ApiResponse;
 import com.pagely.marketservice.application.dto.result.OrderResult;
 import com.pagely.marketservice.application.service.OrderService;
 import com.pagely.marketservice.presentation.dto.request.CreateOrderRequest;
+import com.pagely.marketservice.presentation.dto.request.RegisterTrackingNumberRequest;
 import com.pagely.marketservice.presentation.dto.response.CreateOrderResponse;
 import com.pagely.marketservice.presentation.dto.response.OrderResponse;
+import com.pagely.marketservice.presentation.dto.response.RegisterTrackingNumberResponse;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +43,15 @@ public class OrderController {
     ) {
         OrderResult result = orderService.getOrder(buyerId, orderId);
         return ApiResponse.ok(OrderResponse.fromResult(result));
+    }
+
+    @PostMapping("/{orderId}/tracking")
+    public ResponseEntity<ApiResponse> registerTrackingNumber(
+            @RequestHeader("X-User-Id") UUID sellerId,
+            @PathVariable("orderId") UUID orderId,
+            @Valid @RequestBody RegisterTrackingNumberRequest request
+    ) {
+        OrderResult result = orderService.registerTrackingNumber(request.toCommand(sellerId, orderId));
+        return ApiResponse.ok(RegisterTrackingNumberResponse.fromResult(result));
     }
 }
