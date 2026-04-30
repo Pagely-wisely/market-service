@@ -4,6 +4,7 @@ import com.pagely.common.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public enum SalePostErrorCode implements ErrorCode {
+    SALE_POST_CANNOT_RESTORE("판매글을 판매 가능 상태로 되돌릴 수 없습니다.", HttpStatus.BAD_REQUEST),
     NOT_AVAILABLE("해당 판매글은 주문이 불가능한 상태입니다.", HttpStatus.BAD_REQUEST),
     CANNOT_ORDER_OWN("본인이 등록한 판매글은 주문할 수 없습니다.", HttpStatus.BAD_REQUEST),
     INVALID_SALE_PRICE("판매 가격은 0보다 커야합니다.", HttpStatus.BAD_REQUEST),

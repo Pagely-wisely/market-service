@@ -76,4 +76,22 @@ public class OrderService {
 
         return OrderResult.fromEntity(order);
     }
+
+    // 구매자 주문 취소
+    @Transactional
+    public OrderResult cancelOrder(UUID buyerId, UUID orderId) {
+        Order order = orderRepository.findByIdWithSalePost(orderId)
+                .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
+        order.validateBuyer(buyerId);
+
+        boolean needsRefund = order.isAccepted();
+
+        order.cancel();
+
+        if (needsRefund) {
+            // TODO: 결제 취소 이벤트 발행
+        }
+
+        return OrderResult.fromEntity(order);
+    }
 }

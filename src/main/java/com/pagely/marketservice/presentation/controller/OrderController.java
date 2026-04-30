@@ -5,6 +5,7 @@ import com.pagely.marketservice.application.dto.result.OrderResult;
 import com.pagely.marketservice.application.service.OrderService;
 import com.pagely.marketservice.presentation.dto.request.CreateOrderRequest;
 import com.pagely.marketservice.presentation.dto.request.RegisterTrackingNumberRequest;
+import com.pagely.marketservice.presentation.dto.response.CancelOrderResponse;
 import com.pagely.marketservice.presentation.dto.response.CreateOrderResponse;
 import com.pagely.marketservice.presentation.dto.response.OrderResponse;
 import com.pagely.marketservice.presentation.dto.response.RegisterTrackingNumberResponse;
@@ -62,5 +63,14 @@ public class OrderController {
     ) {
         OrderResult result = orderService.confirmOrder(buyerId, orderId);
         return ApiResponse.ok(OrderResponse.fromResult(result));
+    }
+
+    @PostMapping("/{orderId}/cancel")
+    public ResponseEntity<ApiResponse> cancelOrder(
+            @RequestHeader("X-User-Id") UUID buyerId,
+            @PathVariable("orderId") UUID orderId
+    ) {
+        OrderResult result = orderService.cancelOrder(buyerId, orderId);
+        return ApiResponse.ok(CancelOrderResponse.fromResult(result));
     }
 }

@@ -130,4 +130,23 @@ public class Order extends BaseEntity {
         // 주문 이력 생성
         this.histories.add(OrderHistory.of(this, prevStatus, "구매 확정"));
     }
+
+    // 주문 취소
+    // PENDING: 결제 전 취소 → 이벤트 불필요
+    // ACCEPTED: 결제 완료 후 취소 → 결제 취소 이벤트 필요 (서비스 레이어에서 처리)
+    public void cancel() {
+        if (this.status != OrderStatus.PENDING && this.status != OrderStatus.ACCEPTED) {
+            throw new BusinessException(OrderErrorCode.ORDER_NOT_CANCELLABLE);
+        }
+
+        OrderStatus prevStatus = this.status;
+        this.status = OrderStatus.CANCELLED;
+        this.salePost.markAvailable();
+        
+        this.histories.add(OrderHistory.of(this, prevStatus, "주문 취소")); // 주문 이력 생성
+    }
+
+    public boolean isAccepted() {
+        return this.status == OrderStatus.ACCEPTED;
+    }
 }
