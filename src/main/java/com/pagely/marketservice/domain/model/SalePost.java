@@ -99,6 +99,15 @@ public class SalePost extends BaseEntity {
         this.status = SalePostStatus.RESERVED;
     }
 
+    // 구매 가능 상태로 변경
+    public void markAvailable() {
+        if (this.status != SalePostStatus.RESERVED) {
+            throw new BusinessException(SalePostErrorCode.SALE_POST_CANNOT_RESTORE);
+        }
+
+        this.status = SalePostStatus.AVAILABLE;
+    }
+
     public boolean isSeller(UUID userId) {
         return this.sellerId.equals(userId);
     }

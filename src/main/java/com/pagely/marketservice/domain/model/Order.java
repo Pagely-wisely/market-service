@@ -130,4 +130,21 @@ public class Order extends BaseEntity {
         // 주문 이력 생성
         this.histories.add(OrderHistory.of(this, prevStatus, "구매 확정"));
     }
+
+    // 주문 취소
+    public void cancel() {
+        if (this.status != OrderStatus.PENDING && this.status != OrderStatus.ACCEPTED) {
+            throw new BusinessException(OrderErrorCode.ORDER_NOT_CANCELLABLE);
+        }
+
+        OrderStatus prevStatus = this.status;
+        this.status = prevStatus == OrderStatus.PENDING ? OrderStatus.CANCELLED : OrderStatus.REFUND_REQUESTED;
+        this.salePost.markAvailable();
+        String reason = prevStatus == OrderStatus.PENDING ? "주문 취소" : "환불 요청";
+        this.histories.add(OrderHistory.of(this, prevStatus, reason)); // 주문 이력 생성
+    }
+
+    public boolean isAccepted() {
+        return this.status == OrderStatus.ACCEPTED;
+    }
 }

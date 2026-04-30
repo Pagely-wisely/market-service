@@ -8,6 +8,7 @@ public enum OrderErrorCode implements ErrorCode {
     ORDER_SELLER_MISMATCH("해당 주문의 판매자가 아닙니다.", HttpStatus.FORBIDDEN),
     ORDER_STATUS_NOT_ACCEPTED("주문 승인 상태에서만 가능합니다.", HttpStatus.BAD_REQUEST),
     ORDER_STATUS_NOT_SHIPPING("주문 배송 상태에서만 가능합니다.", HttpStatus.BAD_REQUEST),
+    ORDER_NOT_CANCELLABLE("주문 취소가 불가능한 상태입니다.", HttpStatus.BAD_REQUEST),
     ORDER_NOT_FOUND("해당 주문을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
     private final String code;
