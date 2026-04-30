@@ -85,9 +85,9 @@ public class Order extends BaseEntity {
         return order;
     }
 
-    public void validateOwner(UUID buyerId) {
+    public void validateBuyer(UUID buyerId) {
         if (!this.buyerId.equals(buyerId)) {
-            throw new BusinessException(OrderErrorCode.NOT_ORDER_OWNER);
+            throw new BusinessException(OrderErrorCode.ORDER_BUYER_MISMATCH);
         }
     }
 
@@ -108,6 +108,26 @@ public class Order extends BaseEntity {
         this.trackingNumber = trackingNumber;
         this.courierCompany = courierCompany;
         this.trackingRegisteredAt = LocalDateTime.now();
+        OrderStatus prevStatus = this.status;
         this.status = OrderStatus.SHIPPING;
+
+        // 주문 이력 생성
+        this.histories.add(OrderHistory.of(this, prevStatus, "운송장 등록"));
+    }
+
+    // 구매 확정 (구매자)
+    public void confirm() {
+        // 상태값
+        if (this.status != OrderStatus.SHIPPING) {
+            throw new BusinessException(OrderErrorCode.ORDER_STATUS_NOT_SHIPPING);
+        }
+
+        OrderStatus prevStatus = this.status;
+
+        // 상태변경
+        this.status = OrderStatus.COMPLETED;
+
+        // 주문 이력 생성
+        this.histories.add(OrderHistory.of(this, prevStatus, "구매 확정"));
     }
 }

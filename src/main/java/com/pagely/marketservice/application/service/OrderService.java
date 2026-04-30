@@ -42,7 +42,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
 
-        order.validateOwner(buyerId); // 구매자의 주문인지 검증
+        order.validateBuyer(buyerId); // 구매자의 주문인지 검증
 
         return OrderResult.fromEntity(order);
     }
@@ -58,6 +58,21 @@ public class OrderService {
 
         // 운송장 번호 등록
         order.registerTrackingNumber(command.trackingNumber(), command.courierCompany());
+
+        return OrderResult.fromEntity(order);
+    }
+
+    // 구매자 구매 확정
+    @Transactional
+    public OrderResult confirmOrder(UUID buyerId, UUID orderId) {
+        // 주문 조회
+        Order order = orderRepository.findByIdWithSalePost(orderId)
+                .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
+        // 구매자인지 검증
+        order.validateBuyer(buyerId);
+
+        // 구매 확정
+        order.confirm();
 
         return OrderResult.fromEntity(order);
     }

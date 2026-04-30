@@ -54,4 +54,13 @@ public class OrderController {
         OrderResult result = orderService.registerTrackingNumber(request.toCommand(sellerId, orderId));
         return ApiResponse.ok(RegisterTrackingNumberResponse.fromResult(result));
     }
+
+    @PostMapping("/{orderId}/confirm")
+    public ResponseEntity<ApiResponse> confirmOrder(
+            @RequestHeader("X-User-Id") UUID buyerId,
+            @PathVariable("orderId") UUID orderId
+    ) {
+        OrderResult result = orderService.confirmOrder(buyerId, orderId);
+        return ApiResponse.ok(OrderResponse.fromResult(result));
+    }
 }

@@ -11,8 +11,7 @@ public record CreateOrderResponse(
         UUID salePostId,                    // 판매글 ID
         OrderStatus status,                 // 주문 상태
         int price,                          // 가격
-        LocalDateTime createdAt,            // 생성 시각
-        UUID createdBy                      // 생성자
+        LocalDateTime createdAt             // 생성 시각
 ) {
     public static CreateOrderResponse fromResult(OrderResult r) {
         return new CreateOrderResponse(
@@ -21,8 +20,7 @@ public record CreateOrderResponse(
                 r.salePostId(),
                 r.status(),
                 r.price(),
-                r.createdAt(),
-                r.createdBy()
+                r.createdAt()
         );
     }
 }
