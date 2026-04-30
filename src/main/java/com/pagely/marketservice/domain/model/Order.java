@@ -112,7 +112,7 @@ public class Order extends BaseEntity {
         this.status = OrderStatus.SHIPPING;
 
         // 주문 이력 생성
-        this.histories.add(OrderHistory.of(this, prevStatus, "구매 확정"));
+        this.histories.add(OrderHistory.of(this, prevStatus, "운송장 등록"));
     }
 
     // 구매 확정 (구매자)
