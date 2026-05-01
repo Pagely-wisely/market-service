@@ -19,11 +19,12 @@ public class OrderCreatedEvent extends BaseEvent {
                 order.getId(),
                 new Payload(
                         order.getId(),
+                        order.getBuyerId(),
                         order.getPrice()
                 )
         );
     }
 
-    public record Payload(UUID orderId, int price) {
+    public record Payload(UUID orderId, UUID buyerId, int price) {
     }
 }
