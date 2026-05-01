@@ -4,6 +4,9 @@ import com.pagely.common.exception.BusinessException;
 import com.pagely.marketservice.application.dto.command.CreateOrderCommand;
 import com.pagely.marketservice.application.dto.command.RegisterTrackingNumberCommand;
 import com.pagely.marketservice.application.dto.result.OrderResult;
+import com.pagely.marketservice.domain.event.OrderEvents;
+import com.pagely.marketservice.domain.event.payload.OrderCancelledEvent;
+import com.pagely.marketservice.domain.event.payload.OrderCreatedEvent;
 import com.pagely.marketservice.domain.exception.OrderErrorCode;
 import com.pagely.marketservice.domain.exception.SalePostErrorCode;
 import com.pagely.marketservice.domain.model.Order;
@@ -22,6 +25,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final SalePostRepository salePostRepository;
+    private final OrderEvents orderEvents;
 
     @Transactional
     public OrderResult createOrder(CreateOrderCommand command) {
@@ -34,6 +38,7 @@ public class OrderService {
         Order saved = orderRepository.save(order);
 
         //TODO: 주문 생성 완료 이벤트 발행 처리
+        orderEvents.orderCreated(OrderCreatedEvent.of(saved));
 
         return OrderResult.fromEntity(saved);
     }
@@ -89,7 +94,7 @@ public class OrderService {
         order.cancel();
 
         if (needsRefund) {
-            // TODO: 결제 취소 이벤트 발행
+            orderEvents.orderCancelled(OrderCancelledEvent.of(order)); // 결제 취소 이벤트
         }
 
         return OrderResult.fromEntity(order);
