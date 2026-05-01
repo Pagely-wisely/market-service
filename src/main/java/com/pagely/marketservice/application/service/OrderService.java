@@ -37,7 +37,6 @@ public class OrderService {
 
         Order saved = orderRepository.save(order);
 
-        //TODO: 주문 생성 완료 이벤트 발행 처리
         orderEvents.orderCreated(OrderCreatedEvent.of(saved));
 
         return OrderResult.fromEntity(saved);
