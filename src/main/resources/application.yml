@@ -26,9 +26,20 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: true
+
 logging:
   level:
     org.flywaydb: info
+    com.pagely.marketservice: debug
+    org.springframework.kafka: info
+    org.apache.kafka.clients.producer: info
 
 eureka:
   client:
