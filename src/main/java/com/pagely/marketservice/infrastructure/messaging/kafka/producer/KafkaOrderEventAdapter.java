@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KafkaOrderEventAdapter implements OrderEventPort {
 
-    private static final String ORDER_CREATED_TOPIC = "order.created";
-    private static final String ORDER_CANCELLED_TOPIC = "order.cancelled";
+    private static final String ORDER_CREATED_TOPIC = "order-created";
+    private static final String ORDER_CANCELLED_TOPIC = "order-cancelled";
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
