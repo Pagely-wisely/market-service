@@ -37,7 +37,7 @@ public class OrderService {
 
         Order saved = orderRepository.save(order);
 
-        orderEvents.orderCreated(OrderCreatedEvent.of(saved));
+        orderEvents.orderCreated(OrderCreatedEvent.of(saved, salePost.getSellerId()));
 
         return OrderResult.fromEntity(saved);
     }

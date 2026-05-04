@@ -14,17 +14,18 @@ public class OrderCreatedEvent extends BaseEvent {
         super(DOMAIN_TYPE, orderId, payload);
     }
 
-    public static OrderCreatedEvent of(Order order) {
+    public static OrderCreatedEvent of(Order order, UUID sellerId) {
         return new OrderCreatedEvent(
                 order.getId(),
                 new Payload(
                         order.getId(),
                         order.getBuyerId(),
-                        order.getPrice()
+                        order.getPrice(),
+                        sellerId
                 )
         );
     }
 
-    public record Payload(UUID orderId, UUID buyerId, int price) {
+    public record Payload(UUID orderId, UUID buyerId, int price, UUID sellerId) {
     }
 }
