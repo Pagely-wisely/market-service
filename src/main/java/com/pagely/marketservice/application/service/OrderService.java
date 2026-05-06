@@ -1,6 +1,7 @@
 package com.pagely.marketservice.application.service;
 
 import com.pagely.common.exception.BusinessException;
+import com.pagely.marketservice.application.dto.command.AcceptOrderCommand;
 import com.pagely.marketservice.application.dto.command.CreateOrderCommand;
 import com.pagely.marketservice.application.dto.command.RegisterTrackingNumberCommand;
 import com.pagely.marketservice.application.dto.result.OrderResult;
@@ -97,5 +98,14 @@ public class OrderService {
         }
 
         return OrderResult.fromEntity(order);
+    }
+
+    // 결제 완료 처리
+    @Transactional
+    public void acceptOrder(AcceptOrderCommand command) {
+        Order order = orderRepository.findById(command.orderId())
+                .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
+
+        order.accept();
     }
 }
