@@ -142,11 +142,23 @@ public class Order extends BaseEntity {
         OrderStatus prevStatus = this.status;
         this.status = OrderStatus.CANCELLED;
         this.salePost.markAvailable();
-        
+
         this.histories.add(OrderHistory.of(this, prevStatus, "주문 취소")); // 주문 이력 생성
     }
 
     public boolean isAccepted() {
         return this.status == OrderStatus.ACCEPTED;
+    }
+
+    // 주문 결제 완료 처리
+    public void accept() {
+        if (this.status != OrderStatus.PENDING) {
+            throw new BusinessException(OrderErrorCode.ORDER_NOT_ACCEPTABLE);
+        }
+
+        OrderStatus prevStatus = this.status;
+        this.status = OrderStatus.ACCEPTED;
+
+        this.histories.add(OrderHistory.of(this, prevStatus, "주문 접수(결제 완료)")); // 주문 이력 생성
     }
 }
