@@ -1,5 +1,8 @@
 package com.pagely.marketservice.presentation.controller;
 
+import com.pagely.common.auth.Role;
+import com.pagely.common.auth.annotation.AuthRequired;
+import com.pagely.common.auth.annotation.CurrentUserId;
 import com.pagely.common.pagination.PageRequest;
 import com.pagely.common.pagination.PageResponse;
 import com.pagely.common.response.ApiResponse;
@@ -20,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,8 +35,9 @@ public class SalePostController {
     private final SalePostService salePostService;
 
     @PostMapping()
+    @AuthRequired(role = Role.USER)
     public ResponseEntity<ApiResponse> createSalePost(
-            @RequestHeader("X-User-Id") UUID sellerId,
+            @CurrentUserId UUID sellerId,
             @Valid @RequestBody CreateSalePostRequest request
     ) {
         CreateSalePostCommand command = request.toCommand(sellerId);
