@@ -3,9 +3,11 @@ package com.pagely.marketservice.infrastructure.messaging.outbox;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pagely.marketservice.domain.event.BaseEvent;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,5 +39,23 @@ public class OutboxManageService {
             log.error("Outbox 이벤트 직렬화 실패. eventType={}", event.getEventType(), e);
             throw new IllegalStateException("Outbox 이벤트 직렬화 실패: " + event.getEventType(), e);
         }
+    }
+
+    public List<OutboxEvent> getUnpublishedOutboxEvents(int batchSize) {
+        return outboxRepository.findUnpublishedEvents(
+                PageRequest.of(0, batchSize)
+        );
+    }
+
+    @Transactional
+    public void markPublished(UUID outboxId) {
+        outboxRepository.findById(outboxId)
+                .ifPresent(OutboxEvent::markPublished);
+    }
+
+    @Transactional
+    public void recordPublishFailure(UUID outboxId, String failureMessage) {
+        outboxRepository.findById(outboxId)
+                .ifPresent(event -> event.markFailed(failureMessage));
     }
 }
