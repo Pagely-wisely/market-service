@@ -30,7 +30,7 @@ spring:
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
         spring.json.add.type.headers: false
     consumer:
@@ -53,3 +53,6 @@ eureka:
     enabled: false
     register-with-eureka: false
     fetch-registry: false
+
+outbox:
+  poll-interval-ms: 5000
