@@ -29,7 +29,7 @@ public class KafkaEventPublisher {
                     if (ex != null) {
                         outboxManageService.recordPublishFailure(outboxId, ex.getMessage());
 
-                        log.error("Kafka 발생 실패 topic: {}, outboxId: {}, key: {}", topic, outboxId, key);
+                        log.error("Kafka 발행 실패 topic: {}, outboxId: {}, key: {}", topic, outboxId, key);
                         return;
                     }
 
