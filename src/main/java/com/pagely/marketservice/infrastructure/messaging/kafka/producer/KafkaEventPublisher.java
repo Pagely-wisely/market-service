@@ -36,7 +36,7 @@ public class KafkaEventPublisher {
                     // 성공 처리
                     outboxManageService.markPublished(outboxId);
 
-                    log.info("Kafka 발행 성공 topic: {}, outboxId: {}, key: {} offset: {}",
+                    log.debug("Kafka 발행 성공 topic: {}, outboxId: {}, key: {} offset: {}",
                             topic, outboxId, key, result.getRecordMetadata().offset());
                 });
     }

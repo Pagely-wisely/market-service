@@ -20,11 +20,12 @@ public class OutboxPoller {
     @Scheduled(fixedDelayString = "${outbox.poll-interval-ms}")
     public void publishUnpublishedEvents() {
         List<OutboxEvent> events = outboxManageService.claimPublishTargets(BATCH_SIZE);
-        log.info("[OutboxPoller] 미발행 이벤트 : {}건", events.size());
 
         if (events.isEmpty()) {
             return;
         }
+
+        log.debug("[OutboxPoller] 미발행 이벤트 : {}건", events.size());
 
         for (OutboxEvent event : events) {
             kafkaEventPublisher.publish(event);
