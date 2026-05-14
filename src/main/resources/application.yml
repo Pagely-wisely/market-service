@@ -53,3 +53,6 @@ eureka:
     enabled: false
     register-with-eureka: false
     fetch-registry: false
+
+outbox:
+  poll-interval-ms: 5000
