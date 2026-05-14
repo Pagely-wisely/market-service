@@ -19,9 +19,9 @@ public class OutboxPoller {
     // Outbox에 적재된 미발행 이벤트들을 주기적으로 Kafka 메시지로 발행
     @Scheduled(fixedDelayString = "${outbox.poll-interval-ms}")
     public void publishUnpublishedEvents() {
-        List<OutboxEvent> events = outboxManageService.getUnpublishedOutboxEvents(BATCH_SIZE);
+        List<OutboxEvent> events = outboxManageService.claimPublishTargets(BATCH_SIZE);
         log.info("[OutboxPoller] 미발행 이벤트 : {}건", events.size());
-        
+
         if (events.isEmpty()) {
             return;
         }

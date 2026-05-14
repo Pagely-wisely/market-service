@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -24,7 +23,7 @@ public class OutboxRepositoryAdapter implements OutboxRepository {
     }
 
     @Override
-    public List<OutboxEvent> findUnpublishedEvents(Pageable pageable) {
-        return jpaOutboxRepository.findUnpublishedEvents(pageable);
+    public List<OutboxEvent> findUnpublishedEvents(int limit) {
+        return jpaOutboxRepository.findUnpublishedEvents(limit);
     }
 }

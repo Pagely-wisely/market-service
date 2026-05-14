@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,10 +40,15 @@ public class OutboxManageService {
         }
     }
 
-    public List<OutboxEvent> getUnpublishedOutboxEvents(int batchSize) {
-        return outboxRepository.findUnpublishedEvents(
-                PageRequest.of(0, batchSize)
-        );
+    @Transactional
+    public List<OutboxEvent> claimPublishTargets(int batchSize) {
+        List<OutboxEvent> events = outboxRepository.findUnpublishedEvents(batchSize);
+
+        for (OutboxEvent event : events) {
+            event.startPublishing();
+        }
+
+        return events;
     }
 
     @Transactional
