@@ -1,0 +1,58 @@
+server:
+  port: 19031
+
+spring:
+  application:
+    name: marketservice
+
+  config:
+    import:
+      - optional:configserver:http://localhost:8888
+      - optional:classpath:.env[.properties]
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${MARKET_DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: market-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+logging:
+  level:
+    org.flywaydb: info
+    com.pagely.marketservice: debug
+    org.springframework.kafka: info
+    org.apache.kafka.clients.producer: info
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8000/eureka/
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+
+outbox:
+  poll-interval-ms: 5000
