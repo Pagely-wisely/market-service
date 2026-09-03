@@ -5,7 +5,7 @@ Pagely 플랫폼의 중고책 거래 마이크로서비스입니다.
 
 ---
 
-## 프로젝트 설명
+## 1. 프로젝트 설명
 
 Pagely는 독서 모임 커뮤니티와 읽은 도서를 거래할 수 있는 종합 독서 플랫폼입니다.
 독서에 대한 관심 증가와 독서 모임 문화 확산에 맞춰, 누구나 쉽게 독서 모임에
@@ -13,34 +13,34 @@ Pagely는 독서 모임 커뮤니티와 읽은 도서를 거래할 수 있는 �
 
 핵심적으로 다음 세 가지 문제를 해결합니다.
 
-- 긍정적인 독서 습관 형성 — 독서 모임 및 활동 관리를 통해 자연스러운 독서 참여를
+- ✅긍정적인 독서 습관 형성 — 독서 모임 및 활동 관리를 통해 자연스러운 독서 참여를
   유도하고 동기를 부여합니다.
-- 독서 진입 장벽 완화 — 읽은 책에 대한 중고 거래로 독서 비용을 절감하고
+- ✅독서 진입 장벽 완화 — 읽은 책에 대한 중고 거래로 독서 비용을 절감하고
   선순환 구조를 형성합니다.
-- AI 기반 독서 흥미 유발 — 독후감·활동 데이터를 기반으로 개인화 도서 추천과
+- ✅AI 기반 독서 흥미 유발 — 독후감·활동 데이터를 기반으로 개인화 도서 추천과
   독후 요약을 제공합니다.
 
 ---
 
-## 기술 스택
+## 2. 기술 스택
 
-| 분류 | 기술 |
-|------|------|
-| Language | Java 21 |
-| Framework | Spring Boot 3.5 |
-| DB | PostgreSQL |
-| ORM | Spring Data JPA / Hibernate |
-| Migration | Flyway |
-| Message Broker | Apache Kafka |
-| Service Discovery | Spring Cloud Netflix Eureka Client |
-| HTTP Client | Spring Cloud OpenFeign |
-| 공통 라이브러리 | com.pagely:common:2.0.1 (GitHub Packages) |
-| 테스트 | JUnit 5, Testcontainers (PostgreSQL) |
-| 기타 | Lombok |
+| 분류                | 기술                                        |
+|-------------------|-------------------------------------------|
+| Language          | Java 21                                   |
+| Framework         | Spring Boot 3.5                           |
+| DB                | PostgreSQL                                |
+| ORM               | Spring Data JPA / Hibernate               |
+| Migration         | Flyway                                    |
+| Message Broker    | Apache Kafka                              |
+| Service Discovery | Spring Cloud Netflix Eureka Client        |
+| HTTP Client       | Spring Cloud OpenFeign                    |
+| 공통 라이브러리          | com.pagely:common:2.0.1 (GitHub Packages) |
+| 테스트               | JUnit 5, Testcontainers (PostgreSQL)      |
+| 기타                | Lombok                                    |
 
 ---
 
-## 실행 방법
+## 3. 실행 방법
 
 ### 사전 요구사항
 
@@ -125,7 +125,7 @@ docker run -d \
 
 ---
 
-## 주요 구현
+## 4. 주요 구현
 
 ### 판매글(SalePost) 상태 머신
 
@@ -161,28 +161,28 @@ PENDING → ACCEPTED → SHIPPING → COMPLETED
 
 **판매글**
 
-| Method | URL | 설명 | 인증 |
-|--------|-----|------|------|
-| `POST` | `/api/v1/sale-posts` | 판매글 등록 | 필요 |
-| `GET` | `/api/v1/sale-posts` | 판매글 목록 조회 (페이지네이션) | 불필요 |
-| `GET` | `/api/v1/sale-posts/{salePostId}` | 판매글 상세 조회 | 불필요 |
+| Method | URL                               | 설명                 | 인증  |
+|--------|-----------------------------------|--------------------|-----|
+| `POST` | `/api/v1/sale-posts`              | 판매글 등록             | 필요  |
+| `GET`  | `/api/v1/sale-posts`              | 판매글 목록 조회 (페이지네이션) | 불필요 |
+| `GET`  | `/api/v1/sale-posts/{salePostId}` | 판매글 상세 조회          | 불필요 |
 
 **주문**
 
-| Method | URL | 설명 | 인증 |
-|--------|-----|------|------|
-| `POST` | `/api/v1/orders` | 주문 생성 | 필요 |
-| `GET` | `/api/v1/orders/{orderId}` | 주문 상세 조회 | 필요 |
+| Method | URL                                 | 설명              | 인증 |
+|--------|-------------------------------------|-----------------|----|
+| `POST` | `/api/v1/orders`                    | 주문 생성           | 필요 |
+| `GET`  | `/api/v1/orders/{orderId}`          | 주문 상세 조회        | 필요 |
 | `POST` | `/api/v1/orders/{orderId}/tracking` | 운송장 번호 등록 (판매자) | 필요 |
-| `POST` | `/api/v1/orders/{orderId}/confirm` | 구매 확정 (구매자) | 필요 |
-| `POST` | `/api/v1/orders/{orderId}/cancel` | 주문 취소 (구매자) | 필요 |
+| `POST` | `/api/v1/orders/{orderId}/confirm`  | 구매 확정 (구매자)     | 필요 |
+| `POST` | `/api/v1/orders/{orderId}/cancel`   | 주문 취소 (구매자)     | 필요 |
 
 ### Kafka 이벤트
 
-| 방향 | 토픽 | 설명 |
-|------|------|------|
-| 발행 | `order-created` | 주문 생성 완료 |
-| 발행 | `order-cancelled` | 주문 취소 (결제 취소 트리거) |
+| 방향 | 토픽                  | 설명                          |
+|----|---------------------|-----------------------------|
+| 발행 | `order-created`     | 주문 생성 완료                    |
+| 발행 | `order-cancelled`   | 주문 취소 (결제 취소 트리거)           |
 | 구독 | `payment-completed` | 결제 완료 수신 → 주문 `ACCEPTED` 처리 |
 
 ### Outbox 패턴 기반 이벤트 발행
@@ -210,9 +210,10 @@ Testcontainers 기반 통합 테스트로 5개 스레드 동시 요청 → 1건 
 
 ---
 
-## 트러블슈팅
+## 5. 트러블슈팅
 
 ### 주문 및 결제 처리 흐름
+
 - Market Service가 주문을 생성하고, Payment Service와 Kafka 메시지로 통신하는
   이벤트 기반 구조로 결제를 처리.
 - 흐름: ① 사용자가 구매 버튼 클릭 → ② Toss 결제 위젯을 통해 결제 요청 진행 →
@@ -220,6 +221,7 @@ Testcontainers 기반 통합 테스트로 5개 스레드 동시 요청 → 1건 
   Payment Service의 결제 결과 이벤트를 수신함.
 
 ### 주문 데이터 정합성 보장 및 메시지 전달 안정성 향상 — Outbox 패턴
+
 - 문제: 기존 구조는 주문 테이블 INSERT 후 트랜잭션 커밋, 그다음 Kafka로 직접
   발행(AFTER_COMMIT)하는 방식이라 DB 트랜잭션 밖에서 발행이 일어나 원자성이
   보장되지 않음. Kafka 발행 실패 시 이벤트가 유실되어 결제 서비스가 주문 생성
@@ -229,17 +231,17 @@ Testcontainers 기반 통합 테스트로 5개 스레드 동시 요청 → 1건 
   Kafka로 메시지를 발행. 발행 실패 시 다음 폴링에서 재시도하여
   "DB 커밋 = 이벤트 저장 보장"을 달성.
 - 구현 방식:
-  - 중복 발행 방지: SELECT ... FOR UPDATE SKIP LOCKED로 다른 인스턴스가
-    선점 중인 행을 건너뛰고, 조회와 동시에 publishing = true로 마킹 후 즉시 커밋해
-    다른 인스턴스의 쿼리 조건에서 제외.
-  - 스케줄러 기반 폴링: 5000ms마다 100건씩 미발행 이벤트를 배치 조회하여 처리.
-    kafkaTemplate.send().whenComplete()로 비동기 처리해 스케줄러 스레드를
-    블로킹하지 않으면서, 발행 성공 시 published = true, 실패 시 failureCount를
-    증가시키고 다음 폴링에서 재시도.
+    - 중복 발행 방지: SELECT ... FOR UPDATE SKIP LOCKED로 다른 인스턴스가
+      선점 중인 행을 건너뛰고, 조회와 동시에 publishing = true로 마킹 후 즉시 커밋해
+      다른 인스턴스의 쿼리 조건에서 제외.
+    - 스케줄러 기반 폴링: 5000ms마다 100건씩 미발행 이벤트를 배치 조회하여 처리.
+      kafkaTemplate.send().whenComplete()로 비동기 처리해 스케줄러 스레드를
+      블로킹하지 않으면서, 발행 성공 시 published = true, 실패 시 failureCount를
+      증가시키고 다음 폴링에서 재시도.
 
 ---
 
-## 데모 / 이미지
+## 6. 데모 / 이미지
 
 <!-- TODO: 서비스 시연 GIF 또는 스크린샷 추가 -->
 
