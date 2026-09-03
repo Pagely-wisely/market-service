@@ -13,11 +13,11 @@ Pagely는 독서 모임 커뮤니티와 읽은 도서를 거래할 수 있는 �
 
 핵심적으로 다음 세 가지 문제를 해결합니다.
 
-- ✅긍정적인 독서 습관 형성 — 독서 모임 및 활동 관리를 통해 자연스러운 독서 참여를
+- ✅ 긍정적인 독서 습관 형성 — 독서 모임 및 활동 관리를 통해 자연스러운 독서 참여를
   유도하고 동기를 부여합니다.
-- ✅독서 진입 장벽 완화 — 읽은 책에 대한 중고 거래로 독서 비용을 절감하고
+- ✅ 독서 진입 장벽 완화 — 읽은 책에 대한 중고 거래로 독서 비용을 절감하고
   선순환 구조를 형성합니다.
-- ✅AI 기반 독서 흥미 유발 — 독후감·활동 데이터를 기반으로 개인화 도서 추천과
+- ✅ AI 기반 독서 흥미 유발 — 독후감·활동 데이터를 기반으로 개인화 도서 추천과
   독후 요약을 제공합니다.
 
 ---
@@ -42,13 +42,13 @@ Pagely는 독서 모임 커뮤니티와 읽은 도서를 거래할 수 있는 �
 
 ## 3. 실행 방법
 
-### 사전 요구사항
+### 3.1. 사전 요구사항
 
 - Docker (PostgreSQL, Kafka 컨테이너 실행용)
 - JDK 21
 - GitHub Packages 접근 권한 (`gpr.user`, `gpr.key`)
 
-### 1. 환경변수 설정
+### 3.2. 환경변수 설정
 
 `src/main/resources/.env` 파일을 생성합니다.
 
@@ -60,7 +60,7 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 ```
 
-### 2. GitHub Packages 인증 설정
+### 3.3. GitHub Packages 인증 설정
 
 `~/.gradle/gradle.properties`에 아래를 추가합니다.
 
@@ -76,7 +76,7 @@ export GPR_USER=<GitHub_Username>
 export GPR_KEY=<GitHub_PAT>
 ```
 
-### 3. 의존 서비스 실행
+### 3.4. 의존 서비스 실행
 
 PostgreSQL과 Kafka가 실행 중이어야 합니다.
 
@@ -103,7 +103,7 @@ docker run -d \
   bitnami/kafka:latest
 ```
 
-### 4. 빌드 및 실행
+### 3.5. 빌드 및 실행
 
 ```bash
 # 빌드
@@ -113,7 +113,7 @@ docker run -d \
 ./gradlew bootRun
 ```
 
-### 5. 테스트
+### 3.6. 테스트
 
 ```bash
 # 전체 테스트 (Testcontainers — Docker 데몬 실행 필요)
@@ -127,7 +127,7 @@ docker run -d \
 
 ## 4. 주요 구현
 
-### 판매글(SalePost) 상태 머신
+### 4.1. 판매글(SalePost) 상태 머신
 
 판매글은 중고책 한 권에 대한 단일 아이템 게시글입니다. 재고 수량 대신 상태로 가용 여부를 관리합니다.
 
@@ -141,7 +141,7 @@ AVAILABLE → RESERVED → SOLD
 
 주문 생성 시 `RESERVED`로 전환되고, 주문 취소 시 `AVAILABLE`로 복구됩니다.
 
-### 주문(Order) 상태 머신
+### 4.2. 주문(Order) 상태 머신
 
 ```
 PENDING → ACCEPTED → SHIPPING → COMPLETED
@@ -157,7 +157,7 @@ PENDING → ACCEPTED → SHIPPING → COMPLETED
 
 상태 전환마다 `OrderHistory`에 이력이 누적됩니다.
 
-### API 엔드포인트
+### 4.3. API 엔드포인트
 
 **판매글**
 
@@ -177,7 +177,7 @@ PENDING → ACCEPTED → SHIPPING → COMPLETED
 | `POST` | `/api/v1/orders/{orderId}/confirm`  | 구매 확정 (구매자)     | 필요 |
 | `POST` | `/api/v1/orders/{orderId}/cancel`   | 주문 취소 (구매자)     | 필요 |
 
-### Kafka 이벤트
+### 4.4. Kafka 이벤트
 
 | 방향 | 토픽                  | 설명                          |
 |----|---------------------|-----------------------------|
@@ -185,7 +185,7 @@ PENDING → ACCEPTED → SHIPPING → COMPLETED
 | 발행 | `order-cancelled`   | 주문 취소 (결제 취소 트리거)           |
 | 구독 | `payment-completed` | 결제 완료 수신 → 주문 `ACCEPTED` 처리 |
 
-### Outbox 패턴 기반 이벤트 발행
+### 4.5. Outbox 패턴 기반 이벤트 발행
 
 DB 트랜잭션과 Kafka 발행의 원자성을 보장하기 위해 Outbox 패턴을 적용했습니다.
 
@@ -201,7 +201,7 @@ OrderService
 
 다중 인스턴스 환경에서 중복 발행을 방지하기 위해 `SELECT ... FOR UPDATE SKIP LOCKED`로 각 인스턴스가 서로 다른 행을 선점합니다.
 
-### 비관적 락(Pessimistic Lock)을 이용한 동시 주문 제어
+### 4.6. 비관적 락(Pessimistic Lock)을 이용한 동시 주문 제어
 
 동시에 여러 구매자가 같은 판매글에 주문을 시도할 경우, `READ_COMMITTED` 격리 수준에서 Lost Update가 발생합니다.
 `SELECT ... FOR UPDATE`로 판매글 행에 배타 락을 획득해 하나의 판매글에 주문이 정확히 1건만 생성되도록 보장합니다.
@@ -212,25 +212,17 @@ Testcontainers 기반 통합 테스트로 5개 스레드 동시 요청 → 1건 
 
 ## 5. 트러블슈팅
 
-### 주문 및 결제 처리 흐름
+### 5.1. 주문 데이터 정합성 보장 및 메시지 전달 안정성 향상 ✅ — Outbox 패턴 📦
 
-- Market Service가 주문을 생성하고, Payment Service와 Kafka 메시지로 통신하는
-  이벤트 기반 구조로 결제를 처리.
-- 흐름: ① 사용자가 구매 버튼 클릭 → ② Toss 결제 위젯을 통해 결제 요청 진행 →
-  ③ 결제 승인 완료 처리. Market Service는 주문 생성 이벤트를 발행하고,
-  Payment Service의 결제 결과 이벤트를 수신함.
-
-### 주문 데이터 정합성 보장 및 메시지 전달 안정성 향상 — Outbox 패턴
-
-- 문제: 기존 구조는 주문 테이블 INSERT 후 트랜잭션 커밋, 그다음 Kafka로 직접
+- **문제**: 기존 구조는 주문 테이블 INSERT 후 트랜잭션 커밋, 그다음 Kafka로 직접
   발행(AFTER_COMMIT)하는 방식이라 DB 트랜잭션 밖에서 발행이 일어나 원자성이
   보장되지 않음. Kafka 발행 실패 시 이벤트가 유실되어 결제 서비스가 주문 생성
   사실을 알 수 없고 정합성이 깨짐.
-- 해결: Outbox 패턴 도입. 주문 테이블 INSERT와 아웃박스 테이블 INSERT를
+- **해결**: Outbox 패턴 도입. 주문 테이블 INSERT와 아웃박스 테이블 INSERT를
   같은 트랜잭션(BEFORE_COMMIT)으로 묶어 원자성을 보장하고, 별도 OutboxPoller가
   Kafka로 메시지를 발행. 발행 실패 시 다음 폴링에서 재시도하여
   "DB 커밋 = 이벤트 저장 보장"을 달성.
-- 구현 방식:
+- **구현 방식**:
     - 중복 발행 방지: SELECT ... FOR UPDATE SKIP LOCKED로 다른 인스턴스가
       선점 중인 행을 건너뛰고, 조회와 동시에 publishing = true로 마킹 후 즉시 커밋해
       다른 인스턴스의 쿼리 조건에서 제외.
@@ -243,8 +235,7 @@ Testcontainers 기반 통합 테스트로 5개 스레드 동시 요청 → 1건 
 
 ## 6. 데모 / 이미지
 
-<!-- TODO: 서비스 시연 GIF 또는 스크린샷 추가 -->
+### 6.1. 판매글 및 주문 흐름
 
-<!-- TODO: API 문서(Swagger/Notion 등) 링크 추가 -->
+![판매글 및 주문 흐름](docs/images/market-order-flow.png)
 
-<!-- TODO: 배포 URL 추가 -->
