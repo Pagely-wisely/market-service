@@ -31,7 +31,7 @@ public class OrderService {
     @Transactional
     public OrderResult createOrder(CreateOrderCommand command) {
 
-        SalePost salePost = salePostRepository.findById(command.salePostId())
+        SalePost salePost = salePostRepository.findByIdForUpdate(command.salePostId())
                 .orElseThrow(() -> new BusinessException(SalePostErrorCode.SALE_POST_NOT_FOUND));
 
         Order order = Order.create(command.buyerId(), salePost);

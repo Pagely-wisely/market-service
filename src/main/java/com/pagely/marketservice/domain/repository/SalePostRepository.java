@@ -11,5 +11,7 @@ public interface SalePostRepository {
 
     Optional<SalePost> findById(UUID salePostId);
 
+    Optional<SalePost> findByIdForUpdate(UUID salePostId);
+
     Page<SalePost> findAll(Pageable pageable);
 }
