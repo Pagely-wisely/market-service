@@ -26,6 +26,11 @@ public class SalePostRepositoryAdapter implements SalePostRepository {
     }
 
     @Override
+    public Optional<SalePost> findByIdForUpdate(UUID salePostId) {
+        return jpaSalePostRepository.findByIdForUpdate(salePostId);
+    }
+
+    @Override
     public Page<SalePost> findAll(Pageable pageable) {
         return jpaSalePostRepository.findAll(pageable);
     }
